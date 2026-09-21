@@ -91,7 +91,7 @@ Required. Configures how to connect to the ODBC database and how to handle recon
 
 | Parameter | Default | Description |
 |-----------|---------|-------------|
-| `str` | | DB [connection](https://github.com/mkleehammer/pyodbc/wiki/The-pyodbc-Module#connect) settings |
+| `str` | | [ODBC connection string](https://www.connectionstrings.com/) |
 | `attributes` | | *(Optional)* Connection [attributes](https://github.com/mkleehammer/pyodbc/wiki/Connection#connection-attributes) |
 | `encoding` | `utf-16` | Encoding used when writing string data to the database |
 | `decoding` | | *(Optional)* Encoding used when reading string data from the database — see below |
@@ -102,9 +102,7 @@ Required. Configures how to connect to the ODBC database and how to handle recon
   For more information about encoding and decoding, see the [pyodbc Unicode documentation](https://github.com/mkleehammer/pyodbc/wiki/Unicode).
 </Aside>
 
-### Subsection "str"
-
-The ODBC connection string, passed directly to the driver in `Key=Value;` format. It
+The `str` connection string is passed directly to the driver in `Key=Value;` format. It
 must include a `Driver={...}` entry naming a driver registered on the host system (see
 [Prerequisites](#prerequisites)), plus whatever connection parameters that driver expects —
 typically `Server`, `Port`, `Database`, `Uid`, `Pwd`.
