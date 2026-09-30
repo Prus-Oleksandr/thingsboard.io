@@ -204,7 +204,8 @@ const processedItems = items.map((item) => {
 		flex-shrink: 0;
 	}
 
-	.ic-card__icon svg {
+	/* The icon is injected with set:html, so it never carries the scoped class */
+	.ic-card__icon :global(svg) {
 		width: auto;
 		height: 100%;
 	}
