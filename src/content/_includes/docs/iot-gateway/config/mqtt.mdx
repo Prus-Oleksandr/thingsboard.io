@@ -1673,7 +1673,7 @@ Let's configure a Connect request in the MQTT connector to (re)announce the devi
 Follow these steps:
 
 <Steps>
-1. Go to "**Devices & assets**" - "**Gateways**" on the left sidebar and select your gateway.
+1. Go to "**Devices & assets**" → "**Gateways**" on the left sidebar and select your gateway.
 
    <ImageGallery images={[
      {
@@ -1867,7 +1867,7 @@ We'll demonstrate two ways to extract the device name:
 Follow these steps:
 
 <Steps>
-1. Go to "**Devices & assets**" - "**Gateways**" on the left sidebar and select your gateway.
+1. Go to "**Devices & assets**" → "**Gateways**" on the left sidebar and select your gateway.
 
    <ImageGallery images={[
      {
@@ -2054,7 +2054,7 @@ We'll demonstrate two ways to extract the device name:
 Follow these steps:
 
 <Steps>
-1. Go to "**Devices & assets**" - "**Gateways**" on the left sidebar and select your gateway.
+1. Go to "**Devices & assets**" → "**Gateways**" on the left sidebar and select your gateway.
 
    <ImageGallery images={[
      {
@@ -2137,8 +2137,6 @@ Let's add this attribute to the device `SN-001` in ThingsBoard first:
     alt: 'Add firmwareVersion shared attribute to device',
   },
 ]} />
-
-This message contains the device name in the JSON payload, which is extracted using the `${serialNumber}` JSON path, and the attribute name using the `${versionAttribute}` JSON path. After processing this message, ThingsBoard will retrieve the "firmwareVersion" attribute for device "SN-001" and publish it to the response topic.
 
 The response will be published to the topic `devices/SN-001/attrs` with a payload like `firmwareVersion: "1.2.3"`. Let's subscribe to the response topic to see the result:
 Open terminal and type the following command and press Enter:
@@ -2260,7 +2258,7 @@ Let's configure Attribute updates in the MQTT connector to allow ThingsBoard to 
 Follow these steps:
 
 <Steps>
-1. Go to "**Devices & assets**" - "**Gateways**" in the left sidebar and select your gateway.
+1. Go to "**Devices & assets**" → "**Gateways**" in the left sidebar and select your gateway.
 
    <ImageGallery images={[
      {
@@ -2613,7 +2611,7 @@ Let's configure RPC commands in the MQTT connector to allow ThingsBoard to send 
 Follow these steps:
 
 <Steps>
-1. Go to "**Devices & assets**" - "**Gateways**" on the left sidebar and select your gateway.
+1. Go to "**Devices & assets**" → "**Gateways**" on the left sidebar and select your gateway.
 
    <ImageGallery images={[
      {
