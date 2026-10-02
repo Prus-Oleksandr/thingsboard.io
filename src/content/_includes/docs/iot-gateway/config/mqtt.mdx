@@ -387,12 +387,12 @@ We also want to extract the device name from the `serialNumber` field and the de
 Let's configure the device name and profile in the MQTT connector. For this purpose, follow these steps:
 
 <Steps>
-1. Go to "**Entities**" → "**Gateways**" on the left sidebar and select your gateway.
+1. Go to "**Devices & assets**" → "**Gateways**" on the left sidebar and select your gateway.
 
    <ImageGallery images={[
      {
        src: '/src/assets/images/gateway/mqtt-connector/examples/device-name-and-profile-message-json-1.png',
-       alt: 'Go to Entities → Gateways',
+       alt: 'Go to Devices & assets → Gateways',
      },
    ]} />
 
@@ -460,7 +460,7 @@ Let's configure the device name and profile in the MQTT connector. For this purp
    ]} />
 </Steps>
 
-Now we can check if the device name and profile are set correctly. Go to "**Entities**" > "**Devices**" and as you can see, the device
+Now we can check if the device name and profile are set correctly. Go to "**Devices & assets**" > "**Devices**" and as you can see, the device
 name is set to `SN-001` and the profile is set to `Thermometer`.
 
 <ImageGallery images={[
@@ -552,12 +552,12 @@ Let's configure the MQTT connector to take the device name from the topic and us
 Follow these steps:
 
 <Steps>
-1. Go to "**Entities**" → "**Gateways**" on the left sidebar and select your gateway.
+1. Go to "**Devices & assets**" → "**Gateways**" on the left sidebar and select your gateway.
 
    <ImageGallery images={[
      {
        src: '/src/assets/images/gateway/mqtt-connector/examples/device-name-and-profile-message-json-1.png',
-       alt: 'Go to Entities → Gateways',
+       alt: 'Go to Devices & assets → Gateways',
      },
    ]} />
 
@@ -625,7 +625,7 @@ Follow these steps:
    ]} />
 </Steps>
 
-Now we can check if the device name and profile are set correctly. Go to "**Entities**" > "**Devices**" and as you can see, the device
+Now we can check if the device name and profile are set correctly. Go to "**Devices & assets**" > "**Devices**" and as you can see, the device
 name is set to `Thermo-A` and the profile is set to `Thermometer`.
 
 <ImageGallery images={[
@@ -705,12 +705,12 @@ Configure the MQTT connector to extract the device name from the raw bytes and u
 Follow these steps:
 
 <Steps>
-1. Go to "**Entities**" → "**Gateways**" on the left sidebar and select your gateway.
+1. Go to "**Devices & assets**" → "**Gateways**" on the left sidebar and select your gateway.
 
    <ImageGallery images={[
      {
        src: '/src/assets/images/gateway/mqtt-connector/examples/device-name-and-profile-message-json-1.png',
-       alt: 'Go to Entities → Gateways',
+       alt: 'Go to Devices & assets → Gateways',
      },
    ]} />
 
@@ -778,7 +778,7 @@ Follow these steps:
    ]} />
 </Steps>
 
-Now we can check if the device name and profile are set correctly. Go to "**Entities**" > "**Devices**" and as you can see, the device
+Now we can check if the device name and profile are set correctly. Go to "**Devices & assets**" > "**Devices**" and as you can see, the device
 name is set to `AM-1` and the profile is set to `default`.
 
 <ImageGallery images={[
@@ -863,12 +863,12 @@ We'll map `sensorModel` → `model` and `temp` → timeseries `temperature`. Nex
 Follow these steps:
 
 <Steps>
-1. Go to "**Entities**" → "**Gateways**" on the left sidebar and select your gateway.
+1. Go to "**Devices & assets**" → "**Gateways**" on the left sidebar and select your gateway.
 
    <ImageGallery images={[
      {
        src: '/src/assets/images/gateway/mqtt-connector/examples/device-name-and-profile-message-json-1.png',
-       alt: 'Go to Entities → Gateways',
+       alt: 'Go to Devices & assets → Gateways',
      },
    ]} />
 
@@ -945,8 +945,8 @@ Follow these steps:
    ]} />
 </Steps>
 
-Now we can check if the attribute data is set correctly. Go to "**Entities**" > "**Devices**", select a created device and as you
-can see, the humidity data is available in the "**Attributes**" section:
+Now we can check if the attribute data is set correctly. Go to "**Devices & assets**" > "**Devices**", select a created device and as you
+can see, the model data is available in the "**Attributes**" section:
 
 <ImageGallery images={[
   {
@@ -955,8 +955,8 @@ can see, the humidity data is available in the "**Attributes**" section:
   },
 ]} />
 
-Now we can check if the temperature data is sending correctly. Go to "**Entities**" > "**Devices**", select a created device and as you
-can see, the humidity data is available in the "**Latest telemetry**" section:
+Now we can check if the temperature data is sending correctly. Go to "**Devices & assets**" > "**Devices**", select a created device and as you
+can see, the temperature data is available in the "**Latest telemetry**" section:
 
 <ImageGallery images={[
   {
@@ -1041,12 +1041,12 @@ Then configure the device name and profile in the MQTT connector.
 Follow these steps:
 
 <Steps>
-1. Go to "**Entities**" → "**Gateways**" on the left sidebar and select your gateway.
+1. Go to "**Devices & assets**" → "**Gateways**" on the left sidebar and select your gateway.
 
    <ImageGallery images={[
      {
        src: '/src/assets/images/gateway/mqtt-connector/examples/device-name-and-profile-message-json-1.png',
-       alt: 'Go to Entities → Gateways',
+       alt: 'Go to Devices & assets → Gateways',
      },
    ]} />
 
@@ -1123,7 +1123,7 @@ Follow these steps:
    ]} />
 </Steps>
 
-Now we can check if the attribute data is set correctly. Go to "**Entities**" > "**Devices**", select a created device and as you
+Now we can check if the attribute data is set correctly. Go to "**Devices & assets**" > "**Devices**", select a created device and as you
 can see, the humidity data is available in the "**Attributes**" section:
 
 <ImageGallery images={[
@@ -1133,7 +1133,7 @@ can see, the humidity data is available in the "**Attributes**" section:
   },
 ]} />
 
-Now we can check if the temperature data is sending correctly. Go to "**Entities**" > "**Devices**", select a created device and as you
+Now we can check if the temperature data is sending correctly. Go to "**Devices & assets**" > "**Devices**", select a created device and as you
 can see, the humidity data is available in the "**Latest telemetry**" section:
 
 <ImageGallery images={[
@@ -1673,12 +1673,12 @@ Let's configure a Connect request in the MQTT connector to (re)announce the devi
 Follow these steps:
 
 <Steps>
-1. Go to "**Entities**" - "**Gateways**" on the left sidebar and select your gateway.
+1. Go to "**Devices & assets**" - "**Gateways**" on the left sidebar and select your gateway.
 
    <ImageGallery images={[
      {
        src: '/src/assets/images/gateway/mqtt-connector/examples/device-name-and-profile-message-json-1.png',
-       alt: 'Go to Entities → Gateways',
+       alt: 'Go to Devices & assets → Gateways',
      },
    ]} />
 
@@ -1868,12 +1868,12 @@ We'll demonstrate two ways to extract the device name:
 Follow these steps:
 
 <Steps>
-1. Go to "**Entities**" - "**Gateways**" on the left sidebar and select your gateway.
+1. Go to "**Devices & assets**" - "**Gateways**" on the left sidebar and select your gateway.
 
    <ImageGallery images={[
      {
        src: '/src/assets/images/gateway/mqtt-connector/examples/device-name-and-profile-message-json-1.png',
-       alt: 'Go to Entities → Gateways',
+       alt: 'Go to Devices & assets → Gateways',
      },
    ]} />
 
@@ -2055,12 +2055,12 @@ We'll demonstrate two ways to extract the device name:
 Follow these steps:
 
 <Steps>
-1. Go to "**Entities**" - "**Gateways**" on the left sidebar and select your gateway.
+1. Go to "**Devices & assets**" - "**Gateways**" on the left sidebar and select your gateway.
 
    <ImageGallery images={[
      {
        src: '/src/assets/images/gateway/mqtt-connector/examples/device-name-and-profile-message-json-1.png',
-       alt: 'Go to Entities → Gateways',
+       alt: 'Go to Devices & assets → Gateways',
      },
    ]} />
 
@@ -2261,12 +2261,12 @@ Let's configure Attribute updates in the MQTT connector to allow ThingsBoard to 
 Follow these steps:
 
 <Steps>
-1. Go to "**Entities**" - "**Gateways**" in the left sidebar and select your gateway.
+1. Go to "**Devices & assets**" - "**Gateways**" in the left sidebar and select your gateway.
 
    <ImageGallery images={[
      {
        src: '/src/assets/images/gateway/mqtt-connector/examples/device-name-and-profile-message-json-1.png',
-       alt: 'Go to Entities → Gateways',
+       alt: 'Go to Devices & assets → Gateways',
      },
    ]} />
 
@@ -2614,12 +2614,12 @@ Let's configure RPC commands in the MQTT connector to allow ThingsBoard to send 
 Follow these steps:
 
 <Steps>
-1. Go to "**Entities**" - "**Gateways**" on the left sidebar and select your gateway.
+1. Go to "**Devices & assets**" - "**Gateways**" on the left sidebar and select your gateway.
 
    <ImageGallery images={[
      {
        src: '/src/assets/images/gateway/mqtt-connector/examples/device-name-and-profile-message-json-1.png',
-       alt: 'Go to Entities → Gateways',
+       alt: 'Go to Devices & assets → Gateways',
      },
    ]} />
 
