@@ -16,7 +16,7 @@ interface Props {
 }
 
 const { gitHubPlatform, headerConfig } = Astro.props;
-const { variant, showSearch, showThemeToggle } = headerConfig;
+const { variant, showSearch, showThemeToggle, minimal } = headerConfig;
 
 // Ship the scroll-flip script only on the variants that go transparent.
 const needsScrollState = variant === 'transparent' || variant === 'transparent-hover';
@@ -28,42 +28,51 @@ const currentYear = new Date().getFullYear();
 	<span class="header-copyright print:only">&copy; {currentYear} The ThingsBoard Authors</span>
 </div>
 
-{/* Before <Navigation> on purpose: its ~125 KiB of markup shifted the centred nav (≈0.012 CLS); `order` restores the visual order. */}
-<div class="head-buttons print:hidden" data-header-variant={variant}>
-	<HeaderIcons showSearch={showSearch} showThemeToggle={showThemeToggle} />
-	<GitHubButton platform={gitHubPlatform} />
-	{/* Both open the `CloudRegionDialog`; the hrefs are the no-script fallback. */}
-	<a
-		class="region-signin__trigger"
-		href="https://thingsboard.cloud/login"
-		target="_blank"
-		rel="noopener noreferrer"
-		data-cloud-auth="signin"
-	>
-		Sign in
-	</a>
-	<NButton
-		id="Menu_TryItNow"
-		href="/installations/choose-region/"
-		variant="filled"
-		class="try gtm_button"
-		data-cloud-auth="signup"
-	>
-		Try for free
-	</NButton>
-	<button onclick="Burger()" class="burger" aria-expanded="false">
-		<Icon name="tabler:menu-2" class="icon-open" aria-hidden="true" />
-		<Icon name="tabler:x" class="icon-close" aria-hidden="true" />
-		<span class="burger__label">
-			<span class="label-open">Menu</span>
-			<span class="label-close">Close</span>
-		</span>
-	</button>
-</div>
+{/* Minimal chrome: the logo and the theme toggle, nothing that leads off the page. */}
+{minimal ? (
+	<div class="head-buttons print:hidden" data-header-variant={variant}>
+		<HeaderIcons showSearch={false} showThemeToggle={showThemeToggle} />
+	</div>
+) : (
+	<>
+		{/* Before <Navigation> on purpose: its ~125 KiB of markup shifted the centred nav (≈0.012 CLS); `order` restores the visual order. */}
+		<div class="head-buttons print:hidden" data-header-variant={variant}>
+			<HeaderIcons showSearch={showSearch} showThemeToggle={showThemeToggle} />
+			<GitHubButton platform={gitHubPlatform} />
+			{/* Both open the `CloudRegionDialog`; the hrefs are the no-script fallback. */}
+			<a
+				class="region-signin__trigger"
+				href="https://thingsboard.cloud/login"
+				target="_blank"
+				rel="noopener noreferrer"
+				data-cloud-auth="signin"
+			>
+				Sign in
+			</a>
+			<NButton
+				id="Menu_TryItNow"
+				href="/installations/choose-region/"
+				variant="filled"
+				class="try gtm_button"
+				data-cloud-auth="signup"
+			>
+				Try for free
+			</NButton>
+			<button onclick="Burger()" class="burger" aria-expanded="false">
+				<Icon name="tabler:menu-2" class="icon-open" aria-hidden="true" />
+				<Icon name="tabler:x" class="icon-close" aria-hidden="true" />
+				<span class="burger__label">
+					<span class="label-open">Menu</span>
+					<span class="label-close">Close</span>
+				</span>
+			</button>
+		</div>
 
-<Navigation />
+		<Navigation />
 
-<CloudRegionDialog signupIds={headerConfig.cloudSignupIds} />
+		<CloudRegionDialog signupIds={headerConfig.cloudSignupIds} />
+	</>
+)}
 
 {needsScrollState && <HeaderScrollWatch />}
 
@@ -138,7 +147,9 @@ const currentYear = new Date().getFullYear();
 				else if (isSidebarOpen()) tracking = 'sidebar';
 				else if (isBurgerOpen()) tracking = 'burger';
 				else if (startX <= OPEN_EDGE && isSidebarDrawer()) tracking = 'sidebar';
-				else if (startX >= window.innerWidth - OPEN_EDGE) tracking = 'burger';
+				// The minimal header has no burger, so no drawer to open.
+				else if (startX >= window.innerWidth - OPEN_EDGE && document.querySelector('header.header .burger'))
+					tracking = 'burger';
 				else tracking = null;
 			},
 			{ passive: true }
