@@ -537,7 +537,7 @@ const currentYear = new Date().getFullYear();
 	}
 
 	// These pages carry ~88px more, so the star and then the account pair give way.
-	header.header:has(.icon-buttons) {
+	header.header:has(> :where(.head-buttons) > .icon-buttons) {
 		@include media-down(2xl) {
 			.gh-button {
 				display: none;
@@ -559,10 +559,12 @@ const currentYear = new Date().getFullYear();
 	// ============================================
 	// PAGE-SPECIFIC HEADER STYLES
 	// ============================================
+	// `data-header-variant` sits on the header's direct children, so `:has(> …)` checks only those
+	// instead of searching the whole header (or `.page`) on every restyle.
 
 	// Solid marketing header with a drop shadow (no border). `services` is
 	// solid-border instead, per the design.
-	header.header:has([data-header-variant='solid-shadow']) {
+	header.header:has(> [data-header-variant='solid-shadow']) {
 		// Same surface bg as solid-border so all marketing headers match.
 		background-color: var(--color-bg-surface);
 		box-shadow:
@@ -571,7 +573,7 @@ const currentYear = new Date().getFullYear();
 	}
 
 	// Transparent header over a hero (transparent variant).
-	header.header:has([data-header-variant='transparent']) {
+	header.header:has(> [data-header-variant='transparent']) {
 		background-color: transparent;
 		box-shadow: none;
 
@@ -614,13 +616,13 @@ const currentYear = new Date().getFullYear();
 	// reserve the promo-banner band so the hero starts below the banner (the
 	// transparent nav then floats over the hero as before). Without this the
 	// fixed banner would overlay the top of the hero / crowd the hero title.
-	.page:has(header.header [data-header-variant='transparent']) .main-frame,
-	.page:has(header.header [data-header-variant='transparent-hover']) .main-frame {
+	.page > header.header:has(> [data-header-variant='transparent']) ~ .main-frame,
+	.page > header.header:has(> [data-header-variant='transparent-hover']) ~ .main-frame {
 		padding-top: var(--promo-h, 0px);
 	}
 
 	// Transparent, opaque on hover + scroll (transparent-hover — pricing, affiliate).
-	header.header:has([data-header-variant='transparent-hover']) {
+	header.header:has(> [data-header-variant='transparent-hover']) {
 		background-color: transparent;
 		// Quick opaque flip synced with the banner.
 		transition:
@@ -633,7 +635,7 @@ const currentYear = new Date().getFullYear();
 	}
 
 	// Scrolled transparent header: un-invert the logo/burger.
-	header.header[data-header-scrolled]:has([data-header-variant='transparent']) {
+	header.header[data-header-scrolled]:has(> [data-header-variant='transparent']) {
 		.logo {
 			filter: none;
 		}
@@ -645,8 +647,8 @@ const currentYear = new Date().getFullYear();
 	}
 
 	// Scrolled state: solid surface for the transparent family.
-	header.header[data-header-scrolled]:has([data-header-variant='transparent']),
-	header.header[data-header-scrolled]:has([data-header-variant='transparent-hover']) {
+	header.header[data-header-scrolled]:has(> [data-header-variant='transparent']),
+	header.header[data-header-scrolled]:has(> [data-header-variant='transparent-hover']) {
 		// Quick flip synced with the banner.
 		transition: all 0.12s ease;
 		background-color: var(--color-bg-surface);
@@ -694,8 +696,8 @@ const currentYear = new Date().getFullYear();
 	}
 
 	// Docs / 404 default header — hairline bottom border.
-	header.header:has([data-header-variant='docs']),
-	header.header:has([data-header-variant='common']) {
+	header.header:has(> [data-header-variant='docs']),
+	header.header:has(> [data-header-variant='common']) {
 		border-bottom: 1px solid var(--sl-color-hairline-shade);
 	}
 
@@ -728,7 +730,7 @@ const currentYear = new Date().getFullYear();
 
 	// Use-cases / case-studies / partners / blog / services etc.:
 	// surface background + bottom border (solid-border variant).
-	header.header:has([data-header-variant='solid-border']) {
+	header.header:has(> [data-header-variant='solid-border']) {
 		background-color: var(--color-bg-surface);
 		border-bottom: 1px solid var(--color-border);
 	}
@@ -775,9 +777,9 @@ const currentYear = new Date().getFullYear();
 			margin: 0 0 1.5rem;
 
 			&,
-			&:has([data-header-variant]),
-			&[data-header-scrolled]:has([data-header-variant]),
-			&:has([data-header-variant]):hover {
+			&:has(> [data-header-variant]),
+			&[data-header-scrolled]:has(> [data-header-variant]),
+			&:has(> [data-header-variant]):hover {
 				border-bottom: 1px solid #d7d9e0;
 				background: none;
 				box-shadow: none;
