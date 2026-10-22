@@ -2509,6 +2509,10 @@ In order to add new RPC method, follow these steps:
     As you can see, the response contains `true`, which means that the method was executed successfully and the relay is
     now on:
 
+    ```json
+    {"result": [{"result": true, "device_name": "Demo Device"}]}
+    ```
+
     <ImageGallery images={[
       {
         src: '/src/assets/images/gateway/opc-ua-connector/examples/rpc-to-connector-3.png',
@@ -2805,14 +2809,15 @@ Example of the attributes updates configuration:
 | mapping[].rpc_methods[].arguments         |                   | (Optional) List of default arguments that will pass to the OPC-UA server method. |
 | mapping[].rpc_methods[].arguments[].type  |                   | Type of the argument.                                                            |
 | mapping[].rpc_methods[].arguments[].value |                   | (Optional) Value of the argument.                                                |
-| mapping[].rpc_methods[].timeout (in ms)   | **5000**          | Timeout in milliseconds for the RPC method execution.                            |
+
+The gateway always replies to ThingsBoard with the value returned by the method, for example
+`{"result": {"result": 8}}`.
 
 Example of the RPC methods configuration:
 
 ```json
 "rpc_methods": [
   {
-    "timeout": 3000,
     "method": "multiply",
     "arguments": [
       {

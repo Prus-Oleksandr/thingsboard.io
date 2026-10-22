@@ -788,7 +788,7 @@ The following parameters are used to configure RPC methods:
 - **Object ID** - the object id in the BACnet device.
 - **Object Type** - the object type in the BACnet device.
 - **Property ID** - the property id in the BACnet device.
-- **Request Timeout** - timeout in milliseconds for the RPC method execution.
+- **Request Timeout** - timeout in seconds for the RPC method execution.
 
 <Aside type="note">
   All configuration parameters list, and their detailed description can be found in the
@@ -1121,7 +1121,7 @@ this (**make sure to use the right device host and port**):
           "objectType": "analogValue",
           "objectId": 1,
           "propertyId": "presentValue",
-          "timeout": 5000,
+          "requestTimeout": 10,
           "requestType": "readProperty"
         }
       ]
@@ -1161,7 +1161,7 @@ get objectType=binaryInput;objectId=1;propertyId=presentValue;
 Response:
 
 ```json
-{"result": {"value":  "inactive"}}
+{"result": "inactive"}
 ```
 
 <ImageGallery images={[
@@ -1186,7 +1186,7 @@ set objectType=binaryInput;objectId=1;propertyId=presentValue;value=1;
 Response:
 
 ```json
-{"result": {"value": 1}}
+{"result": "1"}
 ```
 
 And as you can see, from the screenshot below, the relay telemetry value has changed to `1`:
@@ -1207,7 +1207,7 @@ get objectType=binaryInput;objectId=1;propertyId=presentValue;
 Response:
 
 ```json
-{"result": {"value":  "active"}}
+{"result": "active"}
 ```
 
 <ImageGallery images={[
@@ -1516,7 +1516,7 @@ Example of the device attribute updates configuration:
 | devices[].serverSideRpc[].objectId        |                   | The object id in the BACnet device.                                           |
 | devices[].serverSideRpc[].propertyId      |                   | The property id in the BACnet device.                                         |
 | devices[].serverSideRpc[].priority        |                   | Priority of the value to write (optional, should be an integer from 1 to 16). |
-| devices[].serverSideRpc[].timeout (in ms) | **5000**          | Timeout in milliseconds for the RPC method execution.                         |
+| devices[].serverSideRpc[].requestTimeout (in sec) | **10**          | Timeout in seconds for the RPC method execution.                         |
 
 Example of the device RPC methods configuration:
 
@@ -1529,7 +1529,7 @@ Example of the device RPC methods configuration:
       "objectType": "analogValue",
       "objectId": 3,
       "propertyId": "presentValue",
-      "timeout": 5000
+      "requestTimeout": 10
     }
   ]
 }

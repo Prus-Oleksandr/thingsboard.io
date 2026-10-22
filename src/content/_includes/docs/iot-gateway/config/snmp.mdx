@@ -23,9 +23,9 @@ the first using built-in converters, the second using a custom converter class:
       "pollPeriod": 5000,
       "community": "public",
       "attributes": [
-        { "key": "ReceivedFromGet",       "method": "get",       "oid": "1.3.6.1.2.1.1.1.0", "timeout": 6 },
-        { "key": "ReceivedFromMultiGet",  "method": "multiget",  "oid": ["1.3.6.1.2.1.1.1.0","1.3.6.1.2.1.1.2.0"], "timeout": 6 },
-        { "key": "ReceivedFromGetNext",   "method": "getnext",   "oid": "1.3.6.1.2.1.1.1.0", "timeout": 6 },
+        { "key": "ReceivedFromGet",       "method": "get",       "oid": "1.3.6.1.2.1.1.1.0" },
+        { "key": "ReceivedFromMultiGet",  "method": "multiget",  "oid": ["1.3.6.1.2.1.1.1.0","1.3.6.1.2.1.1.2.0"] },
+        { "key": "ReceivedFromGetNext",   "method": "getnext",   "oid": "1.3.6.1.2.1.1.1.0" },
         { "key": "ReceivedFromMultiWalk", "method": "multiwalk", "oid": ["1.3.6.1.2.1.1.1.0","1.3.6.0.1.2.1"] },
         { "key": "ReceivedFromBulkWalk",  "method": "bulkwalk",  "oid": ["1.3.6.1.2.1.1.1.0","1.3.6.1.2.1.1.2.0"] },
         {
@@ -37,7 +37,7 @@ the first using built-in converters, the second using a custom converter class:
         }
       ],
       "telemetry": [
-        { "key": "ReceivedFromWalk",  "community": "private", "method": "walk",  "oid": "1.3.6.1.2.1.1.1.0" },
+        { "key": "ReceivedFromWalk",  "method": "walk",  "oid": "1.3.6.1.2.1.1.1.0" },
         { "key": "ReceivedFromTable", "method": "table", "oid": "1.3.6.1.2.1.1" }
       ],
       "attributeUpdateRequests": [
@@ -80,6 +80,7 @@ An array of device configurations. Each entry represents one SNMP manager device
 | `ip` | | IP address or hostname of the SNMP manager |
 | `port` | `161` | SNMP port |
 | `pollPeriod` | `5000` | Polling interval in milliseconds |
+| `timeout` | `6` | SNMP request timeout in seconds |
 | `community` | `public` | Default SNMP community string (`public` or `private`) |
 | `converter` | | *(Optional)* Custom converter class name; omit to use the built-in converter |
 | `attributes` | | Array of attribute mappings — see below |
@@ -98,7 +99,7 @@ attributes; `telemetry` entries are sent as time-series telemetry.
 | `method` | SNMP operation to use — see [Supported methods](#supported-methods) |
 | `oid` | Manager object identifier (string or array, depending on the method) |
 
-Method-specific parameters (e.g. `timeout`, `community`, `scalarOid`) are described in
+Method-specific parameters (e.g. `scalarOid`) are described in
 [Supported methods](#supported-methods).
 
 ### Section "attributeUpdateRequests"
@@ -114,7 +115,7 @@ The “attributeUpdateRequests” configuration allows configuring the format of
 | `method` | SNMP write method: `set` or `multiset` |
 | `oid` | Object identifier to write to (used with `set`) |
 | `mappings` | OID-to-value map (used with `multiset`); values may reference `${attribute}` |
-| `type` | SNMP data type for value encoding (see [Supported data types](#supported-data-types)) — **required only for `set` and `multiset` methods** |
+| `type` | SNMP data type for value encoding (see [Supported data types](#supported-data-types)) — used by `set` and `multiset` methods, default `OCTETSTRING` |
 
 ```json
 "attributeUpdateRequests": [
@@ -146,17 +147,17 @@ ThingsBoard allows sending RPC commands to the device connected to ThingsBoard d
 
 Configuration, provided in this section is used for sending RPC requests from ThingsBoard to the device through the gateway.
 
-<Aside type="note">
-  Two modes are supported:
-  - **With reply** — the gateway waits for an SNMP response and forwards it to ThingsBoard.
-  - **Without reply** — the gateway sends the SNMP request and does not wait for a response.
-</Aside>
-
 | Parameter | Description |
 |-----------|-------------|
 | `requestFilter` | RPC method name to bind |
 | `method` | SNMP operation to perform — see [Supported methods](#supported-methods) |
 | `oid` | Object identifier (string or array, depending on the method) |
+
+The gateway always replies to ThingsBoard: with the SNMP response as a string, for example `{"result": "42"}`, or
+`{"error": "<message>"}` on failure.
+
+The connector also has built-in `get` and `set` RPC methods that read or write any OID without configuration. See the
+<DocLink product={props.product} path="features/reserved-rpc/">Reserved RPC methods</DocLink> guide.
 
 ```json
 "serverSideRpcRequests": [
@@ -219,10 +220,10 @@ Configuration, provided in this section is used for sending RPC requests from Th
 
 | Method | Operation | Accepts array OID | Extra parameters |
 |--------|-----------|:-----------------:|------------------|
-| `get` | Read a single object | No | `timeout` |
-| `multiget` | Read multiple objects in one request | Yes | `timeout` |
-| `getnext` | Read the next object after the given OID | No | `timeout` |
-| `walk` | Walk the subtree rooted at OID | No | `community` |
+| `get` | Read a single object | No | — |
+| `multiget` | Read multiple objects in one request | Yes | — |
+| `getnext` | Read the next object after the given OID | No | — |
+| `walk` | Walk the subtree rooted at OID | No | — |
 | `multiwalk` | Walk multiple subtrees | Yes | — |
 | `bulkwalk` | Walk multiple subtrees using BULK requests | Yes | — |
 | `table` | Read an SNMP table | No | — |
@@ -237,14 +238,12 @@ Reads a single SNMP object.
 | Parameter | Description |
 |-----------|-------------|
 | `oid` | Object identifier to read |
-| `timeout` | Request timeout in seconds |
 
 ```json
 {
   "key": "ReceivedFromGet",
   "method": "get",
-  "oid": "1.3.6.1.2.1.1.1.0",
-  "timeout": 6
+  "oid": "1.3.6.1.2.1.1.1.0"
 }
 ```
 
@@ -255,7 +254,6 @@ Reads multiple SNMP objects in a single request.
 | Parameter | Description |
 |-----------|-------------|
 | `oid` | Array of object identifiers to read |
-| `timeout` | Request timeout in seconds |
 
 ```json
 {
@@ -264,8 +262,7 @@ Reads multiple SNMP objects in a single request.
   "oid": [
     "1.3.6.1.2.1.1.1.0",
     "1.3.6.1.2.1.1.2.0"
-  ],
-  "timeout": 6
+  ]
 }
 ```
 
@@ -276,30 +273,26 @@ Reads the next object in the MIB tree after the given OID.
 | Parameter | Description |
 |-----------|-------------|
 | `oid` | Starting OID |
-| `timeout` | Request timeout in seconds |
 
 ```json
 {
   "key": "ReceivedFromGetNext",
   "method": "getnext",
-  "oid": "1.3.6.1.2.1.1.1.0",
-  "timeout": 6
+  "oid": "1.3.6.1.2.1.1.1.0"
 }
 ```
 
 ### walk
 
-Traverses the subtree rooted at the given OID. Accepts an optional `community` override.
+Traverses the subtree rooted at the given OID.
 
 | Parameter | Description |
 |-----------|-------------|
 | `oid` | Root OID for the walk |
-| `community` | *(Optional)* Community string override for this operation |
 
 ```json
 {
   "key": "ReceivedFromWalk",
-  "community": "private",
   "method": "walk",
   "oid": "1.3.6.1.2.1.1.1.0"
 }
@@ -478,5 +471,6 @@ Writes values to multiple SNMP objects in a single operation. The shape of `mapp
 | `IPADDRESS` | IPv4 address in dotted-decimal notation | `"192.168.1.1"` |
 
 <Aside type="note">
-  Data type specification via the `type` field is **required for `set` and `multiset` methods** in both `attributeUpdateRequests` and `serverSideRpcRequests`.
+  Specify the data type with the `type` field for `set` and `multiset` methods in both `attributeUpdateRequests` and
+  `serverSideRpcRequests`. If `type` is omitted, `OCTETSTRING` is used.
 </Aside>

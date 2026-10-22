@@ -73,7 +73,6 @@ The connector reads its settings from a JSON file. Below is a full example:
       "serverSideRpc": [
         {
           "methodRPC": "rpc1",
-          "withResponse": true,
           "valueExpression": "${params}"
         }
       ]
@@ -313,30 +312,36 @@ Configuration, provided in this section is used for sending RPC requests from Th
 |-----------|---------|-------------|
 | `methodRPC` | | Name of the RPC method that clients call to trigger this entry |
 | `action` | | Standard OCPP command to send to the Charge Point (e.g. `RequestStartTransaction`, `ClearCache`, `ChangeAvailability`). If omitted, the payload is sent as a generic `DataTransfer` message instead |
-| `withResponse` | `true` | Send the Charge Point's response back to ThingsBoard |
-| `timeout` | `5` | Seconds to wait for the Charge Point's response before giving up and logging a timeout warning |
-| `valueExpression` | | Template used to build the message payload sent to the Charge Point, filled in from the RPC call's parameters |
+| `timeout` | `5` | Seconds to wait for the Charge Point's response before replying with a timeout error |
+| `valueExpression` | | Template used to build the message payload sent to the Charge Point, filled in from the RPC call's parameters. Required |
+
+The gateway always replies to ThingsBoard. The response contains the Charge Point's reply with keys in snake_case,
+for example, for `ClearCache`:
+
+```json
+{"result": {"status": "Accepted", "custom_data": null, "status_info": null}}
+```
+
+If the Charge Point is not connected, does not reply in time, or returns an error, the response is
+`{"error": "<message>"}`.
 
 ```json
 "serverSideRpc": [
   {
     "methodRPC": "startTransaction",
     "action": "RequestStartTransaction",
-    "withResponse": true,
     "timeout": 10,
     "valueExpression": "{\"id_token\": {\"id_token\": ${params.idTag}, \"type\": \"ISO14443\"}, \"remote_start_id\": ${params.remoteStartId}, \"evse_id\": ${params.evseId}}"
   },
   {
     "methodRPC": "clearCache",
     "action": "ClearCache",
-    "withResponse": true,
     "timeout": 5,
     "valueExpression": "{}"
   },
   {
     "methodRPC": "changeAvailability",
     "action": "ChangeAvailability",
-    "withResponse": true,
     "timeout": 5,
     "valueExpression": "{\"operational_status\": ${params.status}, \"evse\": {\"id\": ${params.evseId}}}"
   }

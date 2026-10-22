@@ -557,20 +557,18 @@ Maps ThingsBoard RPC commands to outgoing HTTP requests sent to the device.
 |-----------|---------|-------------|
 | `deviceNameFilter` | `.*` | Regex filter on device name |
 | `methodFilter` | `echo` | Regex filter on RPC method name |
-| `requestUrlExpression` | `http://127.0.0.1:5001/${deviceName}` | Expression to build the target URL |
+| `requestUrlExpression` | `http://127.0.0.1:5001/${deviceName}` | Expression to build the target URL. Required |
 | `responseTimeout` | `1` | Seconds to wait for a response |
-| `HTTPMethod` | `GET` | HTTP method for the outgoing request |
-| `valueExpression` | `${params}` | Expression to build the request body |
+| `HTTPMethod` | `GET` | HTTP method for the outgoing request. `httpMethod` is accepted too |
+| `valueExpression` | `${params}` | Expression to build the request body. Required |
 | `timeout` | `0.5` | Request timeout in seconds |
 | `tries` | `3` | Number of send retries |
 | `httpHeaders` | `{"CONTENT-TYPE": "application/json"}` | Additional HTTP headers |
 | `security.type` | `anonymous` | Security type: `basic` or `anonymous` |
 
-<Aside type="note">
-  Two modes are supported:
-  - **With reply** — the gateway waits for the device's HTTP response and forwards it to ThingsBoard.
-  - **Without reply** — the gateway sends the request and does not wait for a response (omit `responseTimeout`).
-</Aside>
+The gateway always waits for the HTTP response and replies to ThingsBoard with its body: parsed JSON as
+`{"result": {...}}`, or text as `{"result": "<text>"}`. If the request fails or the server returns a non-2xx status,
+the response is `{"error": "<message>"}`, for example `{"error": "Not Found (code: 404)"}`.
 
 ```json
 "serverSideRpc": [
@@ -593,7 +591,7 @@ Maps ThingsBoard RPC commands to outgoing HTTP requests sent to the device.
   {
     "deviceNameFilter": ".*",
     "methodFilter": "no-reply",
-    "requestUrlExpression": "sensor/${deviceName}/request/${methodName}/${requestId}",
+    "requestUrlExpression": "sensor/${deviceName}/request/${methodName}/${restId}",
     "HTTPMethod": "POST",
     "valueExpression": "${params.hum}",
     "httpHeaders": {
@@ -603,7 +601,16 @@ Maps ThingsBoard RPC commands to outgoing HTTP requests sent to the device.
 ]
 ```
 
-Every telemetry and attribute key also has a built-in GET and SET RPC method available
-automatically. The required parameters are `requestUrlExpression`, `responseTimeout`,
-`HTTPMethod`, and `valueExpression`. See the
-<DocLink product={props.product} path="features/reserved-rpc">Reserved RPC methods</DocLink> guide for details.
+You can also send an HTTP request through the connector without configuring `serverSideRpc`. Send an RPC to
+the gateway device with the method `rest_` followed by any name, for example `rest_setSetpoint`, and pass an object
+with the same keys as a `serverSideRpc` entry in `params`. Add `deviceName` to fill the `${deviceName}` variable:
+
+```json
+{"method": "rest_setSetpoint", "params": {"requestUrlExpression": "http://127.0.0.1:8000/device/${deviceName}/setpoint", "HTTPMethod": "POST", "valueExpression": "{\"setpoint\": ${params.value}}", "deviceName": "Thermostat 1", "value": 22.5, "httpHeaders": {"Content-Type": "application/json"}}}
+```
+
+The response has the same format as for configured RPCs.
+
+The connector also has built-in `get` and `set` RPC methods that send an HTTP request to any URL without
+configuration. They take `requestUrlExpression`, an optional `HTTPMethod`, and, for `set`, a `value` in the parameter
+string. See the <DocLink product={props.product} path="features/reserved-rpc">Reserved RPC methods</DocLink> guide for details.
