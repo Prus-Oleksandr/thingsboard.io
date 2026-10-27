@@ -373,7 +373,7 @@ Example of enum mapping configuration for coil register:
 Example of enum mapping configuration for `RPC to Device` call:
 ```json
 {
-  "method": "getStatus",
+  "tag": "getStatus",
   "type": "16int",
   "address": 1,
   "objectsCount": 1,
@@ -1067,9 +1067,8 @@ Modbus connector supports the following requests mapping:
 - **Attribute updates** - allows update device nodes values from ThingsBoard platform instance.
 - **RPC methods** - allows sending RPC commands to devices. Using RPC methods, you can get or set values of the Modbus
   registers. Modbus connector supports different types of RPC methods, such as:
-    - **Reserved GET/SET methods** - these methods are automatically created for each attribute and time series
-      parameter.
-      You can use them to get or set values of the Modbus registers.
+    - **Reserved GET/SET methods** - built-in `get` and `set` methods that read and write any register of the device
+      without configuration. The register, data type and function code are passed in the RPC parameters.
     - **Configurable RPC methods to device** - these methods allow you to configure custom RPC commands in connector
       configuration that can be sent to the devices.
 
@@ -1199,7 +1198,7 @@ In order to add a new RPC method, follow these steps:
 </Steps>
 
 <Aside type="note">
-  Also, every telemetry and attribute parameter has built-in GET and SET RPC methods out of the box, so you don't need to configure it manually. See <DocLink product={props.product} path="features/reserved-rpc/">the guide</DocLink>.
+  Also, you can read and write any register with the built-in `get` and `set` RPC methods, without configuring them. See <DocLink product={props.product} path="features/reserved-rpc/">the guide</DocLink>.
 </Aside>
 
 #### Usage examples
@@ -1520,7 +1519,7 @@ Full configuration for Modbus connector for the example above will look like thi
 </TabItem>
 <TabItem label="Reserved RPCs">
 
-Every telemetry and attribute parameter has `GET` and `SET` RPC methods out of the box, so you don't need to configure
+The built-in `get` and `set` RPC methods read and write any register of the device, so you don't need to configure
 them manually.
 
 As an example, we will use ThingsBoard Modbus Demo Server, which can be run using Docker and the following command:
@@ -1564,7 +1563,7 @@ get type=bits;functionCode=1;objectsCount=1;address=1;
 Response:
 
 ```json
-{"result":{"value":false}}
+{"result": false}
 ```
 
 <ImageGallery images={[
@@ -1586,13 +1585,13 @@ To set the value of the relay register and turn it on, run the query:
 set type=bits;functionCode=5;objectsCount=1;address=1;value=1;
 ```
 
-Response:
+For the `bits` type, the value is converted to a boolean. Response:
 
 ```json
-{"result":{"value":"1"}}
+{"result": true}
 ```
 
-And as you can see, from the screenshot below, the relay telemetry value has changed to `1`:
+And as you can see from the screenshot below, the response confirms that the relay was set to `true`:
 
 <ImageGallery images={[
   {
@@ -1601,18 +1600,16 @@ And as you can see, from the screenshot below, the relay telemetry value has cha
   },
 ]} />
 
-Also, let's check the value of the relay telemetry again: it is `true`
-now because, in the Modbus connector, booleans come from integers — `0` = `false`, `1` = `true`
-(any non-zero is `true`) — so a register value of `1` is reported as `true`.
+Also, let's check the value of the relay register again with the reserved `get` method:
 
 ```bash
-get type=bits;functionCode=3;objectsCount=1;address=1;
+get type=bits;functionCode=1;objectsCount=1;address=1;
 ```
 
 Response:
 
 ```json
-{"result":{"value":true}}
+{"result": true}
 ```
 
 <ImageGallery images={[
@@ -1870,14 +1867,14 @@ Example of the attributes updates configuration:
 
 | Parameter                         | Description                            |
 |:------------|--------------|
-| server.slaves[].rpc[]                 | List of RPC methods that will be available on the device.                                                                         |
-| server.slaves[].rpc[].tag             | Name of the RPC method. It can be specified as a static value.                                                                    |
-| server.slaves[].rpc[].type            | [Data type](/docs/iot-gateway/config/modbus/#data-types) of value.                                                                |
-| server.slaves[].rpc[].functionCode    | [Function code](/docs/iot-gateway/config/modbus/#modbus-functions) to use for reading the RPC method value from the Modbus slave. |
-| server.slaves[].rpc[].objectsCount    | Number of objects to read from the Modbus slave.                                                                                  |
-| server.slaves[].rpc[].address         | Address of the object in the Modbus slave.                                                                                        |
-| server.slaves[].rpc[].timeout (in ms) | (Optional) Timeout for the request in milliseconds. If not specified, the default timeout is used (5 sec).                        |
-| server.slaves[].rpc[].bitTargetType   | The response type can be either an integer (0/1) or a boolean (True/False). **Used only with type `bits`**.                       |
+| master.slaves[].rpc[]                 | List of RPC methods that will be available on the device.                                                                         |
+| master.slaves[].rpc[].tag             | Name of the RPC method. It can be specified as a static value.                                                                    |
+| master.slaves[].rpc[].type            | [Data type](/docs/iot-gateway/config/modbus/#data-types) of value.                                                                |
+| master.slaves[].rpc[].functionCode    | [Function code](/docs/iot-gateway/config/modbus/#modbus-functions): read — `1`–`4`; write — `5`, `6`, `15`, `16`.            |
+| master.slaves[].rpc[].objectsCount    | Number of objects to read or write.                                                                                               |
+| master.slaves[].rpc[].address         | Address of the object in the Modbus slave.                                                                                        |
+| master.slaves[].rpc[].timeout (in ms) | (Optional) Timeout for the request in milliseconds. If not specified, the default timeout is used (5 sec).                        |
+| master.slaves[].rpc[].bitTargetType   | The response type can be either an integer (0/1) or a boolean (True/False). **Used only with type `bits`**.                       |
 
 Example of the RPC methods configuration:
 
@@ -2341,12 +2338,12 @@ Example of the attribute updates configuration:
 
 | Parameter      | Description                         |
 |:---------------|-----------------------------------|
-| slave.values[].`<register_type>`.rpc[]               | The list of attribute updates.                                                                              |
-| slave.values[].`<register_type>`.rpc[].tag           | Key name of the attribute on the platform.                                                                  |
+| slave.values[].`<register_type>`.rpc[]               | The list of RPC methods.                                                                                    |
+| slave.values[].`<register_type>`.rpc[].tag           | Name of the RPC method.                                                                                     |
 | slave.values[].`<register_type>`.rpc[].address       | Object address.                                                                                             |
 | slave.values[].`<register_type>`.rpc[].type          | Type of value.                                                                                              |
-| slave.values[].`<register_type>`.rpc[].functionCode  | Function code to write value.                                                                               |
-| slave.values[].`<register_type>`.rpc[].objectsCount  | Count of objects to write.                                                                                  |
+| slave.values[].`<register_type>`.rpc[].functionCode  | [Function code](/docs/iot-gateway/config/modbus/#modbus-functions) to use when the RPC method is called: read — `1`–`4`; write — `5`, `6`, `15`, `16`. |
+| slave.values[].`<register_type>`.rpc[].objectsCount  | Count of objects to read or write.                                                                          |
 | slave.values[].`<register_type>`.rpc[].value         | Initial register value.                                                                                     |
 | slave.values[].`<register_type>`.rpc[].bitTargetType | The response type can be either an integer (0/1) or a boolean (True/False). **Used only with type `bits`**. |
 
@@ -2361,7 +2358,7 @@ Example of the RPC methods configuration:
         {
           "tag": "setValue",
           "type": "16int",
-          "functionCode": 5,
+          "functionCode": 6,
           "objectsCount": 1,
           "address": 31,
           "value": 22
