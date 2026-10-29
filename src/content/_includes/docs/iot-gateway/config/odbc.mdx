@@ -123,7 +123,10 @@ setup:
 
 <Aside type="note">
   Hardcoded and placeholder values can be mixed in the same `str`. Placeholder names are
-  case-sensitive and must exactly match the environment variable names.
+  case-sensitive and must exactly match the environment variable names. See
+  <DocLink product={props.product} path="config/general/#environment-variables">Environment Variables</DocLink>
+  for how to set them. If a variable is not set, the placeholder is passed to the driver unchanged
+  and the connection fails with an authentication error.
 </Aside>
 
 ### Subsection "attributes"
