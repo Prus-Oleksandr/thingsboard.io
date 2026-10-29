@@ -45,9 +45,10 @@ Add the connector entry to the `"connectors"` array in `tb_gateway.json`:
 Restart the gateway after adding a new connector.
 
 <Aside type="note">
-  If the `class` name is missing, misspelled, or otherwise fails to load, the gateway starts a
-  placeholder `DummyCustomConnector` in its place instead of failing to start. Implement your
-  custom connector class with the same name as the `class` value to have the gateway load it.
+  Since ThingsBoard IoT Gateway version 3.8.6, if the `class` name is missing, misspelled, or
+  otherwise fails to load, the gateway starts a placeholder `DummyCustomConnector` in its place
+  instead of skipping the connector. Implement your custom connector class with the same name as
+  the `class` value, or fix the `class` value, to have the gateway load it.
 </Aside>
 
 ## Registering a custom converter
