@@ -111,7 +111,7 @@ typically `Server`, `Port`, `Database`, `Uid`, `Pwd`.
 "str": "Driver={PostgreSQL};Server=localhost;Port=5432;Database=thingsboard;Uid=postgres;Pwd=postgres;"
 ```
 
-Sensitive database credentials can be specified not only directly but also passed dynamically as
+Since ThingsBoard IoT Gateway version 3.8.6, sensitive database credentials can also be passed as
 environment variables. To achieve this, the `str` parameter supports placeholders in the
 `${VARIABLE_NAME}` format. This allows you to hide actual passwords and keep them out of the
 configuration file, configuring them instead as environment variables according to your system's
